@@ -1,3 +1,4 @@
+"use client";
 import {
   RainbowKitProvider,
   connectorsForWallets,
@@ -7,10 +8,10 @@ import { injectedWallet } from "@rainbow-me/rainbowkit/wallets";
 import type { AppProps } from "next/app";
 import { WagmiProvider, createConfig, http } from "wagmi";
 import { celo, celoAlfajores } from "wagmi/chains";
-import Layout from "../components/Layout";
-import "../styles/globals.css";
+import Layout from "./components/Layout";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactNode } from "react";
 
 const connectors = connectorsForWallets(
   [
@@ -36,18 +37,14 @@ const config = createConfig({
 
 const queryClient = new QueryClient();
 
-function App({ Component, pageProps }: AppProps) {
+export function AppProviders(props: { children: ReactNode }) {
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
+          <Layout>{props.children}</Layout>
         </RainbowKitProvider>
       </QueryClientProvider>
     </WagmiProvider>
   );
 }
-
-export default App;
